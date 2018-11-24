@@ -3,7 +3,7 @@
 #2018/11/22 可定制的图片切割器
 
 __author__='gamefang'
-version='v1.0.3'
+version='v1.0.4'
 
 import os
 
@@ -16,13 +16,14 @@ cfg=configparser.ConfigParser()
 cfg.read('img_cropper.ini',encoding='utf8')
 cfg={ **cfg._defaults,**cfg._sections }
 
-def image_split(fpath, rownum, colnum, dstpath=''):
+def image_split(fpath, rownum, colnum, dstpath='',keepempty=False):
     '''
     将整张图片均匀切割成若干张小图片
     @param fpath: 图片文件的完整路径
     @param rownum: 准备切割的行数
     @param colnum: 准备切割的列数
     @param dstpath: 切割后图片保存的完整路径，留空则使用/crop
+    @param keepempty: 输出没有内容的空图片
     '''   
     img = Image.open(fpath)
     w, h = img.size
@@ -42,7 +43,11 @@ def image_split(fpath, rownum, colnum, dstpath=''):
         for r in range(rownum):
             for c in range(colnum):
                 box = (c * colwidth, r * rowheight, (c + 1) * colwidth, (r + 1) * rowheight)
-                img.crop(box).save(os.path.join(dstpath, f'{basename}_{count}.{ext}'), ext)
+                cropped_img=img.crop(box)
+                if keepempty or cropped_img.getbbox():
+                    cropped_img.save(os.path.join(dstpath, f'{basename}_{count}.{ext}'), ext)
+                else:
+                    print(f'    第{count}张图片没有元素，不输出！')
                 count += 1
         print(f'图片切割至 {dstpath} ，共生成 {count} 张小图片。')
     else:
