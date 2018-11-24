@@ -3,7 +3,7 @@
 #2018/11/22 可定制的图片切割器
 
 __author__='gamefang'
-version='v1.0.2'
+version='v1.0.3'
 
 import os
 
@@ -51,8 +51,10 @@ def image_split(fpath, rownum, colnum, dstpath=''):
 def main(cfg):
     for fn,info in cfg['tasks'].items():
         rownum,colnum,*others=info.split(',')
-        fullpath=os.path.join(cfg['input_path'],fn)
-        image_split(fullpath,int(rownum),int(colnum),cfg['output_path'])
+        input_path=os.path.join(cfg['input_path'],fn)
+        input_path=os.path.abspath(input_path)
+        output_path=os.path.abspath(cfg['output_path'])
+        image_split(input_path,int(rownum),int(colnum),output_path)
         
 if __name__ == '__main__':
    main(cfg)
