@@ -43,18 +43,16 @@ def color_picker(img,tile_w,tile_h,use_rgb=True):
     '''
     width,height = img.size
     colors = []
-    for point_y in range( height // tile_h + 1 ):
-        for point_x in range( width // tile_w + 1 ):
+    for point_y in range( int(height/tile_h) ):
+        for point_x in range( int(width/tile_w) ):
             this_point = (point_x * tile_w , point_y * tile_h)
             this_color = img.getpixel(this_point)[:3]   #忽略png的alpha
-            print(this_point,this_color)
             if not use_rgb:this_color=color_convert(this_color)
             colors.append( this_color )
     return colors
         
 if __name__ == '__main__':
-    FPATH = r'C:\Users\ran\Desktop\timg.jpg'
-    FPATH = r'C:\Users\ran\Desktop\weapon_tex.png'
+    FPATH = r'C:\Users\ran\Desktop\d_dog_big.png'
     img = Image.open(FPATH)
-    colors = color_picker(img,64,64,False)
+    colors = color_picker(img,16,16,False)
     print(colors)
